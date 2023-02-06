@@ -1,4 +1,4 @@
-from algo import *
+from crypto import *
 
 message = "SALUT"
 
