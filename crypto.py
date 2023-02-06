@@ -15,5 +15,13 @@ def encode(message, cle):
         encoded_msg+=chr(ne + 65 - 1)
     return encoded_msg
 
+
+def decode(message):
+    # to decode we need the init state of the cards
+    pass
+
 def generatekey(n):
+    # key must have same lenth as the message. 
+    # n is the size of the key we want to generate
+
     return "acrpm"
