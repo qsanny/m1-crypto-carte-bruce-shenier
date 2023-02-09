@@ -1,0 +1,45 @@
+import random
+
+# définir un ordre initial pour le paquet de cartes
+deck = [i for i in range(1, 54)]
+
+def shuffle_deck(deck):
+    # étape 1 : Recul du joker noir d'une position
+    black_joker_index = deck.index(53)
+    deck.pop(black_joker_index)
+    deck.insert(black_joker_index - 1 if black_joker_index > 0 else len(deck) - 1, 53)
+
+    # étape 2 : Recul du joker rouge de deux positions
+    red_joker_index = deck.index(54)
+    deck.pop(red_joker_index)
+    deck.insert(red_joker_index - 2 if red_joker_index > 1 else len(deck) - (54 - red_joker_index), 54)
+
+    # étape 3 : Double coupe par rapport aux jokers
+    black_joker_index = deck.index(53)
+    red_joker_index = deck.index(54)
+    deck = deck[black_joker_index+1:] + deck[:black_joker_index+1] + deck[red_joker_index+1:] + deck[:red_joker_index+1]
+
+    # étape 4 : Coupe simple déterminée par la dernière carte
+    last_card_index = deck.index(deck[-1])
+    deck = deck[last_card_index:] + deck[:last_card_index]
+    
+    return deck
+
+def get_letter(deck):
+    # étape 5 : Lecture d'une lettre pseudo-aléatoire
+    n = deck[0]
+    m = deck[n % len(deck)]
+    while m > 26:
+        m -= 26
+    return chr(m + ord("A") - 1)
+
+def generate_key(deck, length):
+    key = ""
+    for i in range(length):
+        deck = shuffle_deck(deck)
+        key += get_letter(deck)
+    return key
+
+# générer une clé de chiffrement de longueur 10
+key = generate_key(deck, 10)
+print("Clé de chiffrement :", key)

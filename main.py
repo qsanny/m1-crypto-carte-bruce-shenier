@@ -10,5 +10,8 @@ print(message)
 
 print(message_enc)
 
-cg = CardGame()
-print((cg))
+# cg = CardGame()
+# print((cg))
+
+kg = KeyGenerator()
+kg.generate_key(5)
