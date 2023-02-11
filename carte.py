@@ -25,7 +25,7 @@ class CarteValeur(Enum):
     ROI = 13
 
     NOIR = 53 # jope
-    BLANC = 54 #nope
+    ROUGE = 54 #nope
 
 class Carte:
     def __init__(self, type: CarteType, value: CarteValeur):
@@ -51,9 +51,9 @@ class CardGame:
         for ct in CarteType:
             if ct != CarteType.JOCKER: # TODO can be avoided !!
                 for cv in CarteValeur:
-                    if cv != CarteValeur.NOIR and cv != CarteValeur.BLANC: # TODO can be avoided !!
+                    if cv != CarteValeur.NOIR and cv != CarteValeur.ROUGE: # TODO can be avoided !!
                         cartes.append(Carte(ct, cv))
-        cartes.append(Carte(CarteType.JOCKER, CarteValeur.BLANC ))
+        cartes.append(Carte(CarteType.JOCKER, CarteValeur.ROUGE ))
         cartes.append(Carte(CarteType.JOCKER, CarteValeur.NOIR)) # TODO SHOULD NOT BE AS! NEED REFACTORING !!
 
         return cartes
@@ -64,6 +64,7 @@ class CardGame:
                 return i
     
     def set_card_pos(self, card: Carte, to):
+        self.cartes.pop(self.get_carte_pos(card))
         self.cartes.insert(to, card)
 
 
@@ -77,8 +78,8 @@ class CardGame:
 
     def __str__(self) -> str:
         s = ""
-        for c in self.cartes:
-            s += c.__str__()
+        for i, c in enumerate(self.cartes):
+            s += f"{i}. "+c.__str__()
         return s
 
 
