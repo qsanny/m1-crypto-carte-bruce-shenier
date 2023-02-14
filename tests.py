@@ -2,7 +2,7 @@ import unittest
 
 from keygen import *
 from carte import *
-from encoder import EncodeDecoder
+from encoder import *
 
 class TestKeyGenerator(unittest.TestCase):
     def test_init_pos(self):
@@ -120,13 +120,13 @@ class TestKeyGenerator(unittest.TestCase):
     
     def test_encode(self):
         msg = "BONJOUR"
-        encoder = EncodeDecoder(KeyGenerator())
+        encoder = Encoder(KeyGenerator())
         encoded_msg = encoder.encode(msg)
         self.assertEqual(encoded_msg, "HLBMOFX")
     
     def test_decode(self):
         msg = "HLBMOFX"
-        decoder = EncodeDecoder(KeyGenerator())
+        decoder = Decoder(KeyGenerator())
         decoded_msg = decoder.decode(msg)
         self.assertEqual(decoded_msg, "BONJOUR")
 

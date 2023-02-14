@@ -1,17 +1,8 @@
 from keygen import *
 from carte import *
+from encoder import EncodeDecoder
 
 message = "SALUT"
 
-key = generatekey(len(message))
-message_enc = encode(message, key)
-
-print(message)
-
-print(message_enc)
-
-# cg = CardGame()
-# print((cg))
-
-kg = KeyGenerator()
-# kg.generate_key(5)
+encoder = EncodeDecoder(KeyGenerator())
+encoded_msg = encoder.encode(message)

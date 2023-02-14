@@ -1,32 +1,5 @@
 from carte import CardGame, CarteType, CarteValeur, Carte
-
-def encode(message, cle):
-    message=message.upper()
-    cle=cle.upper()
-    encoded_msg = ""
-    for i, m in enumerate(message):
-        nm = ord(m) - ord('A') + 1
-        nc = ord(cle[i]) - ord('A') + 1
-
-        ne = (nm + nc)
-        if ne > 26:
-            ne = ne - 26
-        # print(ne)
-        encoded_msg+=chr(ne + ord('A') - 1)
-    return encoded_msg
-
-
-def decode(message):
-    # to decode we need the init state of the cards
-    pass
-
-def generatekey(n):
-    # key must have same lenth as the message. 
-    # n is the size of the key we want to generate
-
-    return "acrpm"
-
-
+from typing import Union
 class KeyGenerator:
     def __init__(self, l = None) -> None:
         self.key = ""
@@ -123,7 +96,7 @@ class KeyGenerator:
         new_set = reste + top + last
         self.cards.cartes = new_set
 
-    def step_5(self):
+    def step_5(self) ->  Union[int, None]:
         first_card = self.cards.cartes[0]
         n = first_card.get_number()
         nieme_card = self.cards.cartes[n]
