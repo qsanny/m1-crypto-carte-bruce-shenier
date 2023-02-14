@@ -3,10 +3,7 @@ from typing import Union
 class KeyGenerator:
     def __init__(self, l = None) -> None:
         self.key = ""
-        if l:
-            self.cards = l
-        else:
-            self.cards = CardGame()
+        self.deck : CardGame = l or CardGame()
     
     def generate_key(self, n: int) ->str:
         key = ""
@@ -31,12 +28,12 @@ class KeyGenerator:
         la carte qui est juste derrière lui). Si le joker noir est en dernière position il passe derrière la carte du
         dessus (donc, en deuxième position).
         '''
-        black_joker_pos = self.cards.get_carte_pos(Carte(CarteType.JOCKER, CarteValeur.NOIR))
+        black_joker_pos = self.deck.get_carte_pos(Carte(CarteType.JOCKER, CarteValeur.NOIR))
         if black_joker_pos == 53:
             # last element
-            self.cards.set_card_pos(Carte(CarteType.JOCKER, CarteValeur.NOIR), 1)
+            self.deck.set_card_pos(Carte(CarteType.JOCKER, CarteValeur.NOIR), 1)
         else:
-            self.cards.set_card_pos(Carte(CarteType.JOCKER, CarteValeur.NOIR), black_joker_pos+1)
+            self.deck.set_card_pos(Carte(CarteType.JOCKER, CarteValeur.NOIR), black_joker_pos+1)
 
 
     def step_2(self):
@@ -45,15 +42,15 @@ class KeyGenerator:
             S’il  ́etait en derni`ere position, il passe en troisi`eme position;
             s’il  ́etait en avant derni`ere position il passe en deuxi`em
         '''
-        red_jocker_pos = self.cards.get_carte_pos(Carte(CarteType.JOCKER, CarteValeur.ROUGE))
-        # self.cards.cartes.pop(red_jocker_pos) # remove the jocker from his current position
+        red_jocker_pos = self.deck.get_carte_pos(Carte(CarteType.JOCKER, CarteValeur.ROUGE))
+        # self.deck.cartes.pop(red_jocker_pos) # remove the jocker from his current position
 
         if red_jocker_pos == 53:
-            self.cards.set_card_pos(Carte(CarteType.JOCKER, CarteValeur.ROUGE), 2) # put it back on the 3th position
+            self.deck.set_card_pos(Carte(CarteType.JOCKER, CarteValeur.ROUGE), 2) # put it back on the 3th position
         elif red_jocker_pos == 52:
-            self.cards.set_card_pos(Carte(CarteType.JOCKER, CarteValeur.ROUGE), 1) # put it back on the 2nd position
+            self.deck.set_card_pos(Carte(CarteType.JOCKER, CarteValeur.ROUGE), 1) # put it back on the 2nd position
         else:
-            self.cards.set_card_pos(Carte(CarteType.JOCKER, CarteValeur.ROUGE), red_jocker_pos+2) # put it back on the 2nd position
+            self.deck.set_card_pos(Carte(CarteType.JOCKER, CarteValeur.ROUGE), red_jocker_pos+2) # put it back on the 2nd position
 
     def step_3(self):
         '''
@@ -64,18 +61,18 @@ class KeyGenerator:
                 le paquet de cartes qui est au-dessous du joker qui est en second. 
         Dans cette op ́eration la couleur des jokers est sans importance
         '''
-        red_jocker_pos = self.cards.get_carte_pos(Carte(CarteType.JOCKER, CarteValeur.ROUGE))
-        black_joker_pos = self.cards.get_carte_pos(Carte(CarteType.JOCKER, CarteValeur.NOIR))
+        red_jocker_pos = self.deck.get_carte_pos(Carte(CarteType.JOCKER, CarteValeur.ROUGE))
+        black_joker_pos = self.deck.get_carte_pos(Carte(CarteType.JOCKER, CarteValeur.NOIR))
 
         first = red_jocker_pos if red_jocker_pos < black_joker_pos else black_joker_pos
         second = red_jocker_pos if red_jocker_pos > black_joker_pos else black_joker_pos
 
-        top = self.cards.cartes[:first]
-        center = self.cards.cartes[first:second+1]
-        bottom = self.cards.cartes[second+1:]
+        top = self.deck.cartes[:first]
+        center = self.deck.cartes[first:second+1]
+        bottom = self.deck.cartes[second+1:]
 
         new_set = bottom + center + top
-        self.cards.cartes = new_set
+        self.deck.cartes = new_set
 
     def step_4(self):
         '''
@@ -87,19 +84,19 @@ class KeyGenerator:
                     les placez derri`ere les autres cartes
                         `a l’exception de la derni`ere carte qui reste la derni`ere.
         '''
-        last_card = self.cards.cartes[-1]
+        last_card = self.deck.cartes[-1]
         n = last_card.get_number()
-        top = self.cards.cartes[:n]
-        reste = self.cards.cartes[n:-1]
-        last = [self.cards.cartes[-1]]
+        top = self.deck.cartes[:n]
+        reste = self.deck.cartes[n:-1]
+        last = [self.deck.cartes[-1]]
         
         new_set = reste + top + last
-        self.cards.cartes = new_set
+        self.deck.cartes = new_set
 
     def step_5(self) ->  Union[int, None]:
-        first_card = self.cards.cartes[0]
+        first_card = self.deck.cartes[0]
         n = first_card.get_number()
-        nieme_card = self.cards.cartes[n]
+        nieme_card = self.deck.cartes[n]
         if nieme_card.type == CarteType.JOCKER:
             return None
         m = nieme_card.get_number()

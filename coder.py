@@ -1,6 +1,6 @@
 from keygen import KeyGenerator
 
-class EncodeDecoder:
+class Coder:
     def __init__(self, kg: KeyGenerator) -> None:
         self.key_generator = kg
     
@@ -8,7 +8,7 @@ class EncodeDecoder:
         return self.key_generator.generate_key(size)
 
 
-class Encoder(EncodeDecoder):
+class Encoder(Coder):
     
     def encode(self, message: str) -> str:
         message = message.upper()
@@ -25,7 +25,7 @@ class Encoder(EncodeDecoder):
 
         return encoded_msg
 
-class Decoder(EncodeDecoder):
+class Decoder(Coder):
 
     def decode(self, message: str) -> str:
         message = message.upper()
