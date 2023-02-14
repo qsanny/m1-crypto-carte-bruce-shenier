@@ -5,14 +5,14 @@ def encode(message, cle):
     cle=cle.upper()
     encoded_msg = ""
     for i, m in enumerate(message):
-        nm = ord(m) - 65 + 1
-        nc = ord(cle[i]) - 65 + 1
+        nm = ord(m) - ord('A') + 1
+        nc = ord(cle[i]) - ord('A') + 1
 
         ne = (nm + nc)
         if ne > 26:
             ne = ne - 26
         # print(ne)
-        encoded_msg+=chr(ne + 65 - 1)
+        encoded_msg+=chr(ne + ord('A') - 1)
     return encoded_msg
 
 
@@ -28,13 +28,29 @@ def generatekey(n):
 
 
 class KeyGenerator:
-    def __init__(self) -> None:
+    def __init__(self, l = None) -> None:
         self.key = ""
-        self.cards = CardGame()
+        if l:
+            self.cards = l
+        else:
+            self.cards = CardGame()
     
-    def generate_key(self, n: int):
-        self.step_1()
-        self.step_2()
+    def generate_key(self, n: int) ->str:
+        key = ""
+        for i in range(n):
+            key+=self.get_key()
+        return key
+    
+    def get_key(self) ->str:
+        # do all steps
+        while True:
+            self.step_1()
+            self.step_2()
+            self.step_3()
+            self.step_4()
+            if m:= self.step_5():
+                return chr(m + ord("A") - 1)
+
     
     def step_1(self):
         '''
@@ -42,7 +58,6 @@ class KeyGenerator:
         la carte qui est juste derrière lui). Si le joker noir est en dernière position il passe derrière la carte du
         dessus (donc, en deuxième position).
         '''
-        print(self.cards)
         black_joker_pos = self.cards.get_carte_pos(Carte(CarteType.JOCKER, CarteValeur.NOIR))
         if black_joker_pos == 53:
             # last element
@@ -50,7 +65,6 @@ class KeyGenerator:
         else:
             self.cards.set_card_pos(Carte(CarteType.JOCKER, CarteValeur.NOIR), black_joker_pos+1)
 
-        print(self.cards)
 
     def step_2(self):
         '''
@@ -102,12 +116,21 @@ class KeyGenerator:
         '''
         last_card = self.cards.cartes[-1]
         n = last_card.get_number()
-        top = self.cards.cartes[:n+1]
-        reste = self.cards.cartes[n+2:-1]
+        top = self.cards.cartes[:n]
+        reste = self.cards.cartes[n:-1]
         last = [self.cards.cartes[-1]]
         
         new_set = reste + top + last
         self.cards.cartes = new_set
 
     def step_5(self):
-        pass
+        first_card = self.cards.cartes[0]
+        n = first_card.get_number()
+        nieme_card = self.cards.cartes[n]
+        if nieme_card.type == CarteType.JOCKER:
+            return None
+        m = nieme_card.get_number()
+        if m > 26:
+            m-=26
+        return m
+        

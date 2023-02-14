@@ -1,18 +1,8 @@
 import unittest
 
-from crypto import *
+from keygen import *
 from carte import *
-
-class Testing(unittest.TestCase):
-    def test_string(self):
-        a = 'some'
-        b = 'some'
-        self.assertEqual(a, b)
-
-    def test_boolean(self):
-        a = True
-        b = True
-        self.assertEqual(a, b)
+from encoder import EncodeDecoder
 
 class TestKeyGenerator(unittest.TestCase):
     def test_init_pos(self):
@@ -36,6 +26,13 @@ class TestKeyGenerator(unittest.TestCase):
         self.assertEqual(kg.cards.get_carte_pos(jn), 12)
         kg.step_1()
         self.assertEqual(kg.cards.get_carte_pos(jn), 13)
+
+        #3
+        kg = KeyGenerator()
+        kg.cards.set_card_pos(jn, 0)
+        self.assertEqual(kg.cards.get_carte_pos(jn), 0)
+        kg.step_1()
+        self.assertEqual(kg.cards.get_carte_pos(jn), 1)
     
 
     def test_step2(self):
@@ -58,6 +55,13 @@ class TestKeyGenerator(unittest.TestCase):
         self.assertEqual(kg.cards.get_carte_pos(jr), 53)
         kg.step_2()
         self.assertEqual(kg.cards.get_carte_pos(jr), 2)
+
+        #3
+        kg = KeyGenerator()
+        kg.cards.set_card_pos(jr, 0)
+        self.assertEqual(kg.cards.get_carte_pos(jr), 0)
+        kg.step_2()
+        self.assertEqual(kg.cards.get_carte_pos(jr), 2)
     
     def test_step3(self):
         kg = KeyGenerator()
@@ -70,10 +74,7 @@ class TestKeyGenerator(unittest.TestCase):
         self.assertEqual(kg.cards.get_carte_pos(jn), 40)
 
         before = kg.cards.cartes
-        print(kg.cards)
-
         kg.step_3()
-        print(kg.cards)
         
         self.assertEqual(kg.cards.cartes[kg.cards.get_carte_pos(jr): kg.cards.get_carte_pos(jn) +1], before[20:41] )
         self.assertEqual(kg.cards.cartes[:kg.cards.get_carte_pos(jr):], before[41:] )
@@ -81,9 +82,57 @@ class TestKeyGenerator(unittest.TestCase):
 
     
     def test_step4(self):
-        pass
+        kg = KeyGenerator()
+        vt = Carte(CarteType.TREFLE, CarteValeur.VALET)
+        kg.cards.set_card_pos(vt, 53)
+        self.assertEqual(kg.cards.cartes[-1].get_number(), 11 )
+
+        before = kg.cards.cartes
+        kg.step_4()
+
+        self.assertEqual(kg.cards.cartes[42:53], before[:11] )
+        self.assertEqual(kg.cards.cartes[:42], before[11:53] )
+        self.assertEqual(kg.cards.cartes[-1], before[-1] )
+        self.assertEqual(kg.cards.cartes[-1], vt )
+    
+    def test_step5(self):
+        kg = KeyGenerator()
+        vt = Carte(CarteType.TREFLE, CarteValeur.VALET)
+        ap = Carte(CarteType.PIQUE, CarteValeur.AS)
+        kg.cards.set_card_pos(vt, 0)
+        kg.cards.set_card_pos(ap, 11)
+
+        self.assertEqual(kg.cards.cartes[0].get_number(), 11 )
+        self.assertEqual(kg.cards.cartes[11].get_number(), 40 )
+
+        m = kg.step_5()
+        self.assertEqual(m, 14) # 14 = 40 - 26
+    
+    def test_get_key(self):
+        kg = KeyGenerator()
+        k = kg.get_key()
+        print(k)
+    
+    def test_generate_key(self):
+        kg = KeyGenerator()
+        k = kg.generate_key(5)
+        print(k)
+    
+    def test_encode(self):
+        msg = "BONJOUR"
+        encoder = EncodeDecoder(KeyGenerator())
+        encoded_msg = encoder.encode(msg)
+        self.assertEqual(encoded_msg, "HLBMOFX")
+    
+    def test_decode(self):
+        msg = "HLBMOFX"
+        decoder = EncodeDecoder(KeyGenerator())
+        decoded_msg = decoder.decode(msg)
+        self.assertEqual(decoded_msg, "BONJOUR")
+
 
         
+
 
 
 if __name__ == '__main__':

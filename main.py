@@ -1,4 +1,4 @@
-from crypto import *
+from keygen import *
 from carte import *
 
 message = "SALUT"
@@ -14,4 +14,4 @@ print(message_enc)
 # print((cg))
 
 kg = KeyGenerator()
-kg.generate_key(5)
+# kg.generate_key(5)

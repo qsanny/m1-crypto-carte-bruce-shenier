@@ -35,7 +35,7 @@ class Carte:
     def __str__(self) -> str:
         return f"#{self.get_number()}: {self.valeur.name} de {self.type.name} \n"
 
-    def get_number(self):
+    def get_number(self) -> int:
         if self.type != CarteType.JOCKER:
             return abs( 13 * self.type.value + self.valeur.value)
         return self.valeur.value
