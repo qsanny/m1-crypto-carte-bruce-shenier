@@ -1,8 +1,13 @@
 from keygen import *
 from carte import *
-from encoder import EncodeDecoder
+from coder import Encoder, Decoder
 
 message = "SALUT"
 
-encoder = EncodeDecoder(KeyGenerator())
-encoded_msg = encoder.encode(message)
+encoder = Encoder(KeyGenerator())
+decoder = Decoder(KeyGenerator())
+
+while(message !="end"):
+    encoded_msg = encoder.encode(message)
+    print(f"{message} -> {encoded_msg} -> {decoder.decode(encoded_msg)} ")
+    message = input('msg$  ')

@@ -36,10 +36,10 @@ class Carte:
         return f"#{self.get_number()}: {self.valeur.name} de {self.type.name} \n"
 
     def get_number(self) -> int:
-        if self.type != CarteType.JOCKER:
-            return abs( 13 * self.type.value + self.valeur.value)
-        return self.valeur.value
-
+        if self.type == CarteType.JOCKER:
+            return 53
+        return 13 * self.type.value + self.valeur.value
+        
 
 
 class CardGame:
@@ -60,7 +60,7 @@ class CardGame:
 
     def get_carte_pos(self, carte: Carte) ->int:
         for (i, c) in enumerate(self.cartes):
-            if(c.get_number() == carte.get_number()):
+            if(c.type == carte.type and c.valeur == carte.valeur ):
                 return i
     
     def set_card_pos(self, card: Carte, to):

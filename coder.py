@@ -11,6 +11,7 @@ class EncodeDecoder:
 class Encoder(EncodeDecoder):
     
     def encode(self, message: str) -> str:
+        message = message.upper()
         key = self.generate_key(len(message))
         encoded_msg = ""
 
@@ -27,6 +28,7 @@ class Encoder(EncodeDecoder):
 class Decoder(EncodeDecoder):
 
     def decode(self, message: str) -> str:
+        message = message.upper()
         key = self.generate_key(len(message))
         decoded_msg = ""
 
