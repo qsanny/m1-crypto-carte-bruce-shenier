@@ -97,6 +97,7 @@ class KeyGenerator:
         first_card = self.deck.cartes[0]
         n = first_card.get_number()
         nieme_card = self.deck.cartes[n]
+        
         if nieme_card.type == CarteType.JOCKER:
             return None
         m = nieme_card.get_number()

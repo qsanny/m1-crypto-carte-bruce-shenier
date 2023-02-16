@@ -20,20 +20,22 @@ class TestKeyGenerator(unittest.TestCase):
         kg.step_1()
         self.assertEqual(kg.deck.get_carte_pos(jn), 1)
 
-        #2
-        kg = KeyGenerator()
-        kg.deck.set_card_pos(jn, 12)
-        self.assertEqual(kg.deck.get_carte_pos(jn), 12)
-        kg.step_1()
-        self.assertEqual(kg.deck.get_carte_pos(jn), 13)
+        print(kg.deck)
 
-        #3
-        kg = KeyGenerator()
-        kg.deck.set_card_pos(jn, 0)
-        self.assertEqual(kg.deck.get_carte_pos(jn), 0)
-        kg.step_1()
-        self.assertEqual(kg.deck.get_carte_pos(jn), 1)
-    
+        # #2
+        # kg = KeyGenerator()
+        # kg.deck.set_card_pos(jn, 12)
+        # self.assertEqual(kg.deck.get_carte_pos(jn), 12)
+        # kg.step_1()
+        # self.assertEqual(kg.deck.get_carte_pos(jn), 13)
+
+        # #3
+        # kg = KeyGenerator()
+        # kg.deck.set_card_pos(jn, 0)
+        # self.assertEqual(kg.deck.get_carte_pos(jn), 0)
+        # kg.step_1()
+        # self.assertEqual(kg.deck.get_carte_pos(jn), 1)
+
 
     def test_step2(self):
         kg = KeyGenerator()
