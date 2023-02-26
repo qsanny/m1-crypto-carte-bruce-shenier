@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <title>Document</title>
+</head>
+<body>
+
+<div id="app">
+    
+    <span v-for="c in deck">
+        <img class="card" :src="c.img" alt="" srcset="">
+    </span>
+
+
+    <div class="input">
+        <input v-model="message" type="text">
+        <button @click="encode()" >encrypt</button>
+
+        <div>
+            Encoded message = {{encoded_message}}
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+  const { createApp } = Vue
+
+
+  createApp({
+    data() {
+      return {
+        cards_values:['ace',2,3,4,5,6,7,8,9,10, "jack", "queen", "king"],
+        cards_types:["diamonds", "clubs", "spades", "hearts"],
+        message: 'Hello',
+        imgs: ['imgs/10_of_clubs.svg', "imgs/10_of_diamonds.svg"],
+
+        deck: [],
+
+        encoded_message:""
+      }
+    },
+    mounted(){
+        console.log("monted");
+        console.log('cards_values :>> ', this.cards_values);
+
+        let i = 0;
+        for (const value of this.cards_values) {
+            for (const type of this.cards_types) {
+                this.deck.push({
+                    v:i,
+                    img: `imgs/${value}_of_${type}.svg`
+                })
+                i++
+            }
+        }
+
+        this.deck.sh
+
+        console.log('this.deck :>> ', this.deck);
+    },
+
+    methods: {
+        async encode(){
+            console.log('endocing of :>> ', this.message);
+
+            const response = await fetch('http://127.0.0.1:8000/encode/'+this.message);
+            const blob = await response.json();
+            console.log('blob :>> ', blob);
+            this.encoded_message = blob.encoded
+
+            
+        }
+    }
+  }).mount('#app')
+</script>
+
+<style>
+    .card{
+        width: 100px;
+        height: 200px;
+        margin: 5px;
+    }
+
+</style>
+    
+</body>
+</html>

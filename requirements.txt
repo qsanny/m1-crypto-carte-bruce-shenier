@@ -1,0 +1,3 @@
+fastapi
+pip install sqlalchemy
+pip install "uvicorn[standard]"
