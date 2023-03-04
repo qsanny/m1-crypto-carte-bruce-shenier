@@ -1,9 +1,22 @@
 from carte import CardGame, CarteType, CarteValeur, Carte
-from typing import Union
+from typing import Union, List
 class KeyGenerator:
-    def __init__(self, l = None) -> None:
+    def __init__(self, l: List[str] = None) -> None:
         self.key = ""
-        self.deck : CardGame = l or CardGame()
+        if l:
+            cg = CardGame()
+            lis = cg.cartes
+            newlis: list[Carte] = []
+            for cnum in l:
+                carte = cg.get_card_from_num(int(cnum))
+                newlis.append(carte)
+            
+            cg.cartes = newlis
+            self.deck = cg
+        else:
+            self.deck : CardGame = CardGame()
+        
+        print(self.deck)
     
     def generate_key(self, n: int) ->str:
         key = ""

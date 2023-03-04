@@ -39,6 +39,13 @@ class Carte:
         if self.type == CarteType.JOCKER:
             return 53
         return 13 * self.type.value + self.valeur.value
+    
+    def get_number2(self) -> int:
+        if self.type == CarteType.JOCKER and self.valeur == CarteValeur.NOIR:
+            return 54
+        elif self.type == CarteType.JOCKER and self.valeur == CarteValeur.ROUGE:
+            return 53
+        return 13 * self.type.value + self.valeur.value
         
 
 
@@ -63,6 +70,10 @@ class CardGame:
             if(c.type == carte.type and c.valeur == carte.valeur ):
                 return i
     
+    def get_card_from_num(self, num: int) -> Carte:
+        for c in (self.cartes):
+            if(c.get_number2() == num ):
+                return c
     def set_card_pos(self, card: Carte, to):
         self.cartes.pop(self.get_carte_pos(card))
         self.cartes.insert(to, card)

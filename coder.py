@@ -36,7 +36,7 @@ class Decoder(Coder):
             nm = ord(m) - ord('A') + 1
             nk = ord(key[i]) - ord('A') + 1
             ne = nm - nk
-            if ne < 0:
+            if ne <= 0:
                 ne += 26
             decoded_msg+=chr(ne + ord('A') - 1)
 

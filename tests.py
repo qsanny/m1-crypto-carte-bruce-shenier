@@ -125,12 +125,24 @@ class TestKeyGenerator(unittest.TestCase):
         encoder = Encoder(KeyGenerator())
         encoded_msg = encoder.encode(msg)
         self.assertEqual(encoded_msg, "HLBMOFX")
+
+        
     
     def test_decode(self):
         msg = "HLBMOFX"
         decoder = Decoder(KeyGenerator())
         decoded_msg = decoder.decode(msg)
         self.assertEqual(decoded_msg, "BONJOUR")
+    
+    def test_encode_decode(self):
+        msg = "z"
+        encoder = Encoder(KeyGenerator())
+        encoded_msg = encoder.encode(msg)
+
+        decoder = Decoder(KeyGenerator())
+        decoded_msg = decoder.decode(encoded_msg)
+        self.assertEqual(decoded_msg, "Z")
+    
 
 
         

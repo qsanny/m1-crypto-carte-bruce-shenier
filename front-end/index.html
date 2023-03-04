@@ -9,22 +9,105 @@
 </head>
 <body>
 
-<div id="app">
-    
-    <span v-for="c in deck">
-        <img class="card" :src="c.img" alt="" srcset="">
-    </span>
+<style>
+    .card{
+        width: 100px;
+        /* height: 200px; */
+        /* margin: 5px; */
 
+        position: absolute;
+        top: 0;
+    }
+
+    .card:hover{
+        top: -25px;
+    }
+
+    .parent{
+        position: relative;
+        height: 200px;
+    }
+
+
+
+
+
+.shuffle-btn-wrapper{
+    display: flex;
+    justify-content: center;
+}
+
+.selected-card{
+    border: 2px solid red;
+    top: -25px;
+    
+}
+
+</style>
+
+
+<!-- <div class="example-parent">
+    <div class="example-origin">
+      <div
+        id="draggable-1"
+        class="example-draggable"
+        draggable="true"
+      >
+        draggable
+      </div>
+    </div>
+  
+    <div
+      class="example-dropzone"
+    >
+      dropzone
+    </div>
+  </div> -->
+  
+
+<div id="app">
+
+    <div>
+        <h1>Codage</h1>
+
+        <div class="parent">
+            <span v-for="(c,i) in deck" @click="changePos(i)" >
+                <img class="card" :class="{ 'selected-card': i==onChangePos.card1 }" :style="`left: ${i*30}px;`" :src="c.img" alt="" srcset="">
+            </span>
+        </div>
+
+        <div class="shuffle-btn-wrapper">
+            <button class="shuffle-btn" @click="shuffle_deck()" >Shuffle</button>
+        </div>
+
+
+        <div class="input">
+            <input v-model="message" type="text">
+            
+            <button @click="encode()" >encode</button>
+
+            <div>
+                Encoded message = {{encoded_message}}
+            </div>
+        </div>
+
+
+    </div>
+    
+    
+
+    
 
     <div class="input">
-        <input v-model="message" type="text">
-        <button @click="encode()" >encrypt</button>
+        <input v-model="msg_to_decode" type="text">
+        <button @click="decode()" >decode</button>
 
         <div>
-            Encoded message = {{encoded_message}}
+            Decoded message = {{msg_decoded}}
         </div>
     </div>
 </div>
+
 
 
 
@@ -35,23 +118,35 @@
   createApp({
     data() {
       return {
+        API_URL: 'http://127.0.0.1:8000/',
         cards_values:['ace',2,3,4,5,6,7,8,9,10, "jack", "queen", "king"],
-        cards_types:["diamonds", "clubs", "spades", "hearts"],
+        cards_types:["clubs", "diamonds", "hearts",  "spades"],
         message: 'Hello',
         imgs: ['imgs/10_of_clubs.svg', "imgs/10_of_diamonds.svg"],
 
         deck: [],
 
-        encoded_message:""
+        encoded_message:"",
+
+
+
+        msg_to_decode:'',
+        msg_decoded:'',
+
+        onChangePos:{
+            run: false,
+            card1:null,
+            card2:null
+        }
       }
     },
     mounted(){
         console.log("monted");
         console.log('cards_values :>> ', this.cards_values);
 
-        let i = 0;
-        for (const value of this.cards_values) {
-            for (const type of this.cards_types) {
+        let i = 1;
+        for (const type of this.cards_types) {
+            for (const value of this.cards_values) {
                 this.deck.push({
                     v:i,
                     img: `imgs/${value}_of_${type}.svg`
@@ -60,34 +155,75 @@
             }
         }
 
-        this.deck.sh
+        this.deck.push({
+            v:53,
+            img: `imgs/red_joker.svg`
+        })
+        this.deck.push({
+            v:54,
+            img: `imgs/black_joker.svg`
+        })
+
 
         console.log('this.deck :>> ', this.deck);
+
+        this.set_deck_order()
     },
 
     methods: {
+
+        changePos(i){
+            card = this.deck[i]
+            if(!this.onChangePos.card1){
+                this.onChangePos.card1 = i
+                return
+            } else{
+                this.onChangePos.card2 = i
+            }
+            [this.deck[this.onChangePos.card1], this.deck[this.onChangePos.card2]] = [this.deck[this.onChangePos.card2], this.deck[this.onChangePos.card1]];
+
+            this.onChangePos = {
+                run: false,
+                card1:null,
+                card2:null
+            }
+        },
+
+        async set_deck_order(){
+            let deck = this.deck.map(x => x.v)
+
+            console.log('deck :>> ', JSON.stringify(deck));
+            const response = await fetch(this.API_URL+"set_deck/"+JSON.stringify(deck));
+            // const json = await response.json();
+        },
+        shuffle_deck(){
+            shuffledArray = this.deck.sort((a, b) => 0.5 - Math.random());
+            this.deck = shuffledArray
+
+            console.log('this.deck :>> ', this.deck);
+            this.set_deck_order()
+        },
+
         async encode(){
             console.log('endocing of :>> ', this.message);
 
-            const response = await fetch('http://127.0.0.1:8000/encode/'+this.message);
-            const blob = await response.json();
-            console.log('blob :>> ', blob);
-            this.encoded_message = blob.encoded
+            const response = await fetch(this.API_URL+"encode/"+this.message);
+            const json = await response.json();
+            this.encoded_message = json.encoded  
+        },
 
-            
+        async decode(){
+            console.log('decoding of :>> ', this.msg_to_decode);
+
+            const response = await fetch(this.API_URL+"decode/"+this.msg_to_decode);
+            const json = await response.json();
+            this.msg_decoded = json.decoded  
         }
     }
   }).mount('#app')
 </script>
 
-<style>
-    .card{
-        width: 100px;
-        height: 200px;
-        margin: 5px;
-    }
 
-</style>
     
 </body>
 </html>
