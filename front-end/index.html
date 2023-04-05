@@ -5,11 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>Document</title>
 </head>
 <body>
 
 <style>
+    /* html{
+        background-image: url("bg.jpg");
+    } */
     .card{
         width: 100px;
         /* height: 200px; */
@@ -67,17 +71,68 @@
 
 <div id="app">
 
-    <div>
-        <h1>Codage</h1>
+    
 
-        <div class="parent">
-            <span v-for="(c,i) in deck" @click="changePos(i)" >
-                <img class="card" :class="{ 'selected-card': i==onChangePos.card1 }" :style="`left: ${i*30}px;`" :src="c.img" alt="" srcset="">
-            </span>
+    <div class="" >
+
+        <div class=" rounded-lg shadow-md m-5 p-5 ">
+            <label class="block text-gray-700 font-bold mb-2">
+                Clé
+              </label>
+            <div class="key ">
+                <div class="parent">
+                    Key : 
+                    <span v-for="(c,i) in deck" @click="changePos(i)" >
+                        <img class="card" :class="{ 'selected-card': i==onChangePos.card1 }" :style="`left: ${i*30}px;`" :src="c.img" alt="" srcset="">
+                    </span>
+                </div>
+        
+                <div class="shuffle-btn-wrapper">
+                    <!-- <button class="shuffle-btn" @click="shuffle_deck()" >Shuffle</button> -->
+    
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" @click="shuffle_deck()" type="button">
+                        Mélanger les cartes
+                      </button>
+                </div>    
+            </div>
+        </div>
+        
+        
+        <div class="encode-txt">
+            <div class="flex justify-center items-center" >
+                <form class="bg-white p-6 rounded-lg shadow-md  m-5 p-5 "  style=" width: 100%;">
+                  <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2" for="message">
+                      Message
+                    </label>
+                    <textarea v-model="message" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="message" name="message" rows="8" placeholder="Entrez le message à crypter"></textarea>
+                  </div>
+                  <div class="flex justify-center">
+                    <button class=" mr-5 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" @click="encode()">
+                      Encrypt
+                    </button>
+
+                    <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" @click="decode()">
+                        Decrypt
+                      </button>
+                  </div>
+                </form>
+              </div>
+              
         </div>
 
-        <div class="shuffle-btn-wrapper">
-            <button class="shuffle-btn" @click="shuffle_deck()" >Shuffle</button>
+        <div class="decoded-txt">
+            <div class="flex justify-center items-center" >
+                <form class="bg-white p-6 rounded-lg shadow-md  m-5 p-5 "  style=" width: 100%;">
+                  <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2" for="message">
+                      Message {{action}}
+                    </label>
+                    <textarea v-model="encoded_message" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="message" name="message" rows="8" disabled></textarea>
+                  </div>
+                </form>
+              </div>
+              
         </div>
 
 
@@ -93,9 +148,6 @@
 
 
     </div>
-    
-    
-
     
 
     <div class="input">
@@ -127,6 +179,10 @@
         deck: [],
 
         encoded_message:"",
+
+        key_history:[],
+
+        action:"encodé",
 
 
 
@@ -187,12 +243,14 @@
                 card1:null,
                 card2:null
             }
+
+            //this.set_deck_order()
         },
 
         async set_deck_order(){
             let deck = this.deck.map(x => x.v)
 
-            console.log('deck :>> ', JSON.stringify(deck));
+            console.log('deck kkk:>> ', JSON.stringify(deck));
             const response = await fetch(this.API_URL+"set_deck/"+JSON.stringify(deck));
             // const json = await response.json();
         },
@@ -205,19 +263,54 @@
         },
 
         async encode(){
+            
+            if(this.alreayused()){
+                alert('la clée a déja été utilisée')
+                return
+            }
+            this.set_deck_order()
             console.log('endocing of :>> ', this.message);
 
             const response = await fetch(this.API_URL+"encode/"+this.message);
             const json = await response.json();
             this.encoded_message = json.encoded  
+            this.key_history.push(this.deck.map(x => x.v))
+
+            console.log('this.key_history :>> ', this.key_history);
+
+            this.action="encodé"
         },
 
         async decode(){
+            this.set_deck_order()
+
+            this.msg_to_decode = this.message
             console.log('decoding of :>> ', this.msg_to_decode);
 
             const response = await fetch(this.API_URL+"decode/"+this.msg_to_decode);
             const json = await response.json();
-            this.msg_decoded = json.decoded  
+            this.msg_decoded = json.decoded 
+            
+            this.encoded_message = json.decoded 
+
+            this.action="decodé"
+
+        },
+
+        alreayused(){
+            let f = false
+            let d = this.deck.map(x => x.v).toString()
+            this.key_history.forEach(key => {
+                let k = key.toString()
+                console.log('k :>> ', k);
+                console.log('d :>> ', d);
+                if(k == d){
+                    console.log('true----s');
+                    f = true
+                }
+            });
+
+            return f
         }
     }
   }).mount('#app')
