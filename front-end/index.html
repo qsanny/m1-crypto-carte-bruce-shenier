@@ -75,6 +75,36 @@
 
     <div class="" >
 
+        <!-- <div> 
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" @click="onEmiter()" type="button">
+                Emetteur
+            </button>
+
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" @click="onReceiver()" type="button">
+                Recepeteur
+            </button>
+        </div> -->
+
+
+        <div class=" bg-blue-300 rounded-lg shadow-md m-5 p-5 sticky top-0 z-50">
+            <label class="block text-gray-700 font-bold mb-2" for="message">
+                Mode
+              </label>
+            <label class="relative inline-flex items-center mr-5 cursor-pointer">
+                <input type="checkbox" :value="currentState == 'e'" class="sr-only peer" @change="changestate()" :checked="currentState == 'e'">
+                <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
+                <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300" >
+                    Emetteur
+                </span>
+            </label>
+
+            <label class="relative inline-flex items-center mr-5 cursor-pointer">
+            <input type="checkbox" :value="currentState == 'r'" class="sr-only peer" @change="changestate()" :checked="currentState == 'r'" >
+            <div class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-red-300 dark:peer-focus:ring-red-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-red-600"></div>
+            <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300" >Recepeteur</span>
+            </label>
+        </div>
+
         <div class=" rounded-lg shadow-md m-5 p-5 ">
             <label class="block text-gray-700 font-bold mb-2">
                 Clé
@@ -92,7 +122,13 @@
     
                     <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" @click="shuffle_deck()" type="button">
                         Mélanger les cartes
-                      </button>
+
+                        <span>
+                            <svg style="width: 30px;" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" stroke-linecap="round" stroke-linejoin="round"></path>
+                              </svg>
+                        </span>
+                    </button>
                 </div>    
             </div>
         </div>
@@ -108,13 +144,21 @@
                     <textarea v-model="message" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="message" name="message" rows="8" placeholder="Entrez le message à crypter"></textarea>
                   </div>
                   <div class="flex justify-center">
-                    <button class=" mr-5 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" @click="encode()">
+                    <button  v-if="currentState == 'e'" class=" mr-5 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" @click="encode()">
                       Encrypt
+
+                      <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" stroke-linecap="round" stroke-linejoin="round"></path>
+                      </svg>
                     </button>
 
-                    <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" @click="decode()">
+                    <button v-if="currentState == 'r'" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" @click="decode()">
                         Decrypt
-                      </button>
+
+                        <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13.5 10.5V6.75a4.5 4.5 0 119 0v3.75M3.75 21.75h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" stroke-linecap="round" stroke-linejoin="round"></path>
+                          </svg>
+                    </button>
                   </div>
                 </form>
               </div>
@@ -128,15 +172,28 @@
                     <label class="block text-gray-700 font-bold mb-2" for="message">
                       Message {{action}}
                     </label>
-                    <textarea v-model="encoded_message" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="message" name="message" rows="8" disabled></textarea>
+                    <textarea id="myInput" v-model="encoded_message" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="message" name="message" rows="8" disabled></textarea>
                   </div>
+
+
+                  <div class="flex justify-center">
+                    <button  class=" mr-5 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" @click="copytoclip()">
+                      Copier
+
+                      <svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M11.35 3.836c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m8.9-4.414c.376.023.75.05 1.124.08 1.131.094 1.976 1.057 1.976 2.192V16.5A2.25 2.25 0 0118 18.75h-2.25m-7.5-10.5H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V18.75m-7.5-10.5h6.375c.621 0 1.125.504 1.125 1.125v9.375m-8.25-3l1.5 1.5 3-3.75" stroke-linecap="round" stroke-linejoin="round"></path>
+                      </svg>
+                    </button>
+                  </div>
+
+
                 </form>
               </div>
               
         </div>
 
 
-        <div class="input">
+        <!-- <div class="input">
             <input v-model="message" type="text">
             
             <button @click="encode()" >encode</button>
@@ -144,20 +201,20 @@
             <div>
                 Encoded message = {{encoded_message}}
             </div>
-        </div>
+        </div> -->
 
 
     </div>
     
 
-    <div class="input">
+    <!-- <div class="input">
         <input v-model="msg_to_decode" type="text">
         <button @click="decode()" >decode</button>
 
         <div>
             Decoded message = {{msg_decoded}}
         </div>
-    </div>
+    </div> -->
 </div>
 
 
@@ -193,7 +250,9 @@
             run: false,
             card1:null,
             card2:null
-        }
+        },
+
+        currentState : 'e' // e = emiter, r =receiver
       }
     },
     mounted(){
@@ -227,6 +286,40 @@
     },
 
     methods: {
+
+        copytoclip(){
+            // Get the text field
+            var copyText = document.getElementById("myInput");
+
+            // Select the text field
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); // For mobile devices
+
+            // Copy the text inside the text field
+            navigator.clipboard.writeText(copyText.value);
+
+            // Alert the copied text
+            //alert("Copied the text: " + copyText.value);
+        },
+
+        changestate(){
+            console.log("jjjjj");
+            if (this.currentState == "e"){
+                this.onReceiver()
+            } else{
+                this.onEmiter()
+            }
+        },
+
+        onEmiter(){
+            this.currentState = "e"
+            this.action = "encodé"
+        },
+
+        onReceiver(){
+            this.currentState = "r"
+            this.action = "décodé"
+        },
 
         changePos(i){
             card = this.deck[i]
