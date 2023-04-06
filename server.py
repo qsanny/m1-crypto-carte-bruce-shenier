@@ -8,6 +8,8 @@ from coder import Encoder, Decoder
 
 from ui import Interface
 import json
+from fastapi.middleware.cors import CORSMiddleware
+
 
 message = "SALUT"
 
@@ -30,6 +32,17 @@ class Main:
         return self.decoder.decode(msg)
 
 app = FastAPI()
+
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 main = Main()
 
 @app.get("/")
